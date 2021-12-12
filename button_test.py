@@ -11,8 +11,9 @@ def falling_edge(channel):
 
 
 
-bcm_pin_for_btn = [17, 22, 23, 24]
+bcm_pin_for_btn = [27, 22, 23, 24]
+#bcm_pin_for_btn = [27]
 for pin in bcm_pin_for_btn:
-    GPIO.setup(pin, GPIO.IN)
-    GPIO.add_event_detect(pin, GPIO.RISING, callback=rising_edge)
+    GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+    # GPIO.add_event_detect(pin, GPIO.RISING, callback=rising_edge)
     GPIO.add_event_detect(pin, GPIO.FALLING, callback=falling_edge)
