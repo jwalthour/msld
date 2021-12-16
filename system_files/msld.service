@@ -1,0 +1,8 @@
+[Unit]
+Description=Multi-Sport LED Display
+
+[Service]
+ExecStart=/mnt/source/msld/system_files/start.sh
+
+[Install]
+WantedBy=multi-user.target
