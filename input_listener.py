@@ -1,35 +1,73 @@
 #!/usr/bin/python
+import time
+import typing
 import RPi.GPIO as GPIO
 import readchar
-import time
+import threading
+import logging
+logger = logging.getLogger(__name__)
 
 GPIO.setmode(GPIO.BCM)
 
-bcm_pin_for_btn = [14,15,25,19]
-char_for_btn = ['a','s','d','f']
-
-def falling_edge(channel):
-    print("Falling edge: %r"%channel)
-    if channel in char_for_btn:
-        btn = bcm_pin_for_btn.index(channel)
+BCM_PIN_FOR_BTN = [14,15,25,19]
+CHAR_FOR_BTN = ['a','s','d','f']
 
 
-for pin in bcm_pin_for_btn:
-    GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-    #GPIO.add_event_detect(pin, GPIO.RISING, callback=rising_edge)
-    GPIO.add_event_detect(pin, GPIO.FALLING, callback=falling_edge)
+class InputListener():
+    _kt: threading.Thread = None
+    exit_cb:typing.Callable[[],None] = None
+    btn_cb:typing.Callable[[int], None] = None
 
-print("Listening for keys")
-while True:
-    input_char = readchar.readchar()
-    if input_char in char_for_btn:
-        btn = char_for_btn.index(input_char)
-        print("Got button %d"%btn)
-    elif input_char == '\x03':
-        print("^C")
-        break
-    elif input_char == '\x1a':
-        print("^Z")
-        break
-    else:
-        print("Char %r isn't a button."%input_char)
+    def __init__(self) -> None:
+        for pin in BCM_PIN_FOR_BTN:
+            GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+            GPIO.add_event_detect(pin, GPIO.FALLING, callback=self._falling_edge)
+        self._kt = threading.Thread(target=self._key_listener_thread, daemon=True)
+        self._kt.start()
+
+    def _key_listener_thread(self):
+        logger.info("Listening for keys")
+        while True:
+            input_char = readchar.readchar()
+            if input_char in CHAR_FOR_BTN:
+                btn = CHAR_FOR_BTN.index(input_char)
+                logger.debug("Got button %d"%btn)
+                if self.btn_cb != None:
+                    self.btn_cb(btn)
+            elif input_char == '\x03':
+                logger.debug("^C")
+                break
+            elif input_char == '\x1a':
+                logger.debug("^Z")
+                break
+            else:
+                logger.debug("Char %r isn't a button."%input_char)
+        if self.exit_cb != None:
+            self.exit_cb()
+
+    def _falling_edge(self, channel):
+        logger.debug("Falling edge: %r"%channel)
+        if channel in CHAR_FOR_BTN:
+            btn = BCM_PIN_FOR_BTN.index(channel)
+            if self.btn_cb != None:
+                self.btn_cb(btn)
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+
+    il = InputListener()
+
+    run = True
+    def ex():
+        global run
+        logger.info("Exiting")
+        run = False
+
+    def btn(btn: int):
+        logger.info("Got button: %d"%btn)
+
+    il.btn_cb = btn
+    il.exit_cb = ex
+
+    while run:
+        time.sleep(.1)
