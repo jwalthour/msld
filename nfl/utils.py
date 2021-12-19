@@ -21,9 +21,10 @@ def center_text(text_width,center_pos):
 def split_string(string, num_chars):
   return [(string[i:i + num_chars]).strip() for i in range(0, len(string), num_chars)]
 
-def args():
-  parser = argparse.ArgumentParser()
-
+def add_rpi_display_args(parser: argparse.ArgumentParser):
+  """
+  Add arguments specific to the rpi-rgb-led-matrix
+  """
   # Options for the rpi-rgb-led-matrix library
   parser.add_argument("--led-rows", action="store", help="Display rows. 16 for 16x32, 32 for 32x32. (Default: 32)", default=32, type=int)
   parser.add_argument("--led-cols", action="store", help="Panel columns. Typically 32 or 64. (Default: 64)", default=64, type=int)
@@ -42,10 +43,13 @@ def args():
   parser.add_argument("--led-row-addr-type", action="store", help="0 = default; 1 = AB-addressed panels. (Default: 0)", default=0, type=int, choices=[0,1])
   parser.add_argument("--led-multiplexing", action="store", help="Multiplexing type: 0 = direct; 1 = strip; 2 = checker; 3 = spiral; 4 = Z-strip; 5 = ZnMirrorZStripe; 6 = coreman; 7 = Kaler2Scan; 8 = ZStripeUneven. (Default: 0)", default=0, type=int)
 
+def add_nfl_args(parser: argparse.ArgumentParser):
+  """
+  Add arguments specific to the NFL display
+  """
   # User Options
   parser.add_argument("--fav-team", action="store", help="ID of the team to fallow. (Default:8 (Montreal Canadien)) Change the default in the config.json", type=int)
 
-  return parser.parse_args()
 
 def led_matrix_options(args):
   options = RGBMatrixOptions()

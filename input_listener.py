@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import time
 import typing
 import RPi.GPIO as GPIO
@@ -14,6 +15,10 @@ CHAR_FOR_BTN = ['a','s','d','f']
 
 
 class InputListener():
+    """
+    Class that listens for either keystrokes on stdin or physical button presses,
+    and reports either as a callback
+    """
     _kt: threading.Thread = None
     exit_cb:typing.Callable[[],None] = None
     btn_cb:typing.Callable[[int], None] = None
