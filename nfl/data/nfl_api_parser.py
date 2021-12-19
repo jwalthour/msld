@@ -1,7 +1,7 @@
 import requests
 import datetime
 import time as t
-from utils import convert_time
+from nfl.utils import convert_time
 import logging
 logger = logging.getLogger(__name__)
 

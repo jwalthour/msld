@@ -1,4 +1,4 @@
-from utils import get_file
+from nfl.utils import get_file
 import json
 import os
 import logging
@@ -77,7 +77,10 @@ class ScoreboardConfig:
         j = {}
         path = get_file(filename)
         if os.path.isfile(path):
+            logger.debug("Reading JSON config from " + path)
             j = json.load(open(path))
+        else:
+            logger.warning("No file found at: " + path)
         return j
 
     def __get_config(self, base_filename):

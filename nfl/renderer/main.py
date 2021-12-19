@@ -1,8 +1,8 @@
 from PIL import Image, ImageFont, ImageDraw, ImageSequence
 from rgbmatrix import graphics
-from utils import center_text
+from nfl.utils import center_text, get_file
 from calendar import month_abbr
-from renderer.screen_config import screenConfig
+from nfl.renderer.screen_config import screenConfig
 from datetime import datetime, timedelta
 import time as t
 import re
@@ -23,8 +23,8 @@ class MainRenderer:
         self.image = Image.new('RGB', (self.width, self.height))
         self.draw = ImageDraw.Draw(self.image)
         # Load the fonts
-        self.font = ImageFont.truetype("fonts/score_large.otf", 16)
-        self.font_mini = ImageFont.truetype("fonts/04B_24__.TTF", 8)
+        self.font = ImageFont.truetype(get_file("fonts/score_large.otf"), 16)
+        self.font_mini = ImageFont.truetype(get_file("fonts/04B_24__.TTF"), 8)
 
     def init(self):
         """
@@ -132,15 +132,15 @@ class MainRenderer:
             self.canvas.SetImage(self.image, 0, 0)
             if self.data.helmet_logos:
                 # Open the logo image file
-                away_team_logo = Image.open('logos/{}H.png'.format(game['awayteam'])).resize((20, 20), 1)
-                home_team_logo = Image.open('logos/{}H.png'.format(game['hometeam'])).resize((20, 20), 1).transpose(Image.FLIP_LEFT_RIGHT)
+                away_team_logo = Image.open(get_file('logos/{}H.png'.format(game['awayteam']))).resize((20, 20), 1)
+                home_team_logo = Image.open(get_file('logos/{}H.png'.format(game['hometeam']))).resize((20, 20), 1).transpose(Image.FLIP_LEFT_RIGHT)
                 # Put the images on the canvas
                 self.canvas.SetImage(away_team_logo.convert("RGB"), 1, 12)
                 self.canvas.SetImage(home_team_logo.convert("RGB"), 43, 12)
             else:
                 # TEMP Open the logo image file
-                away_team_logo = Image.open('logos/{}.png'.format(game['awayteam'])).resize((20, 20), Image.BOX)
-                home_team_logo = Image.open('logos/{}.png'.format(game['hometeam'])).resize((20, 20), Image.BOX)
+                away_team_logo = Image.open(get_file('logos/{}.png'.format(game['awayteam']))).resize((20, 20), Image.BOX)
+                home_team_logo = Image.open(get_file('logos/{}.png'.format(game['hometeam']))).resize((20, 20), Image.BOX)
                 # Put the images on the canvas
                 self.canvas.SetImage(away_team_logo.convert("RGB"), 1, 12)
                 self.canvas.SetImage(home_team_logo.convert("RGB"), 43, 12)
@@ -324,15 +324,15 @@ class MainRenderer:
         self.canvas.SetImage(self.image, 0, 0)
         if self.data.helmet_logos:
             # Open the logo image file
-            away_team_logo = Image.open('logos/{}H.png'.format(game['awayteam'])).resize((20, 20), 1)
-            home_team_logo = Image.open('logos/{}H.png'.format(game['hometeam'])).resize((20, 20), 1).transpose(Image.FLIP_LEFT_RIGHT)
+            away_team_logo = Image.open(get_file('logos/{}H.png'.format(game['awayteam']))).resize((20, 20), 1)
+            home_team_logo = Image.open(get_file('logos/{}H.png'.format(game['hometeam']))).resize((20, 20), 1).transpose(Image.FLIP_LEFT_RIGHT)
             # Put the images on the canvas
             self.canvas.SetImage(away_team_logo.convert("RGB"), 1, 0)
             self.canvas.SetImage(home_team_logo.convert("RGB"), 43, 0)
         else:
             # TEMP Open the logo image file
-            away_team_logo = Image.open('logos/{}.png'.format(game['awayteam'])).resize((20, 20), Image.BOX)
-            home_team_logo = Image.open('logos/{}.png'.format(game['hometeam'])).resize((20, 20), Image.BOX)
+            away_team_logo = Image.open(get_file('logos/{}.png'.format(game['awayteam']))).resize((20, 20), Image.BOX)
+            home_team_logo = Image.open(get_file('logos/{}.png'.format(game['hometeam']))).resize((20, 20), Image.BOX)
             # Put the images on the canvas
             self.canvas.SetImage(away_team_logo.convert("RGB"), 1, 0)
             self.canvas.SetImage(home_team_logo.convert("RGB"), 43, 0)
@@ -362,8 +362,8 @@ class MainRenderer:
     def _draw_td(self):
         logger.info('TD')
         # Load the gif file
-        ball = Image.open("assets/td_ball.gif")
-        words = Image.open("assets/td_words.gif")
+        ball = Image.open(get_file("assets/td_ball.gif"))
+        words = Image.open(get_file("assets/td_words.gif"))
         # Set the frame index to 0
         frameNo = 0
         self.canvas.Clear()
@@ -396,7 +396,7 @@ class MainRenderer:
     def _draw_fg(self):
         logger.info('FG')
         # Load the gif file
-        im = Image.open("assets/fg.gif")
+        im = Image.open(get_file("assets/fg.gif"))
         # Set the frame index to 0
         frameNo = 0
         self.canvas.Clear()
