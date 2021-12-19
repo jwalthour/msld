@@ -2,6 +2,9 @@ import requests
 import datetime
 import time as t
 from utils import convert_time
+import logging
+logger = logging.getLogger(__name__)
+
 
 URL = "http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
 
@@ -49,14 +52,14 @@ def get_all_games():
             # i += 1
         return games
     except requests.exceptions.RequestException as e:
-        print("Error encountered getting game info, can't hit ESPN api, retrying")
+        logger.warning("Error encountered getting game info, can't hit ESPN api, retrying")
         # if i < 4:
         #     t.sleep(1)
         #     continue
         # else:
         #     print("Can't hit ESPN api after multiple retries, dying ", e)
     except Exception as e:
-        print("something bad?", e)
+        logger.error("Unknown exception", exc_info=True)
 
 # def which_game(games, fav_team):
 #     # check for fav team first

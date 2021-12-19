@@ -207,7 +207,7 @@ class MainRenderer:
     def _draw_live_game(self, game):
         homescore = game['homescore']
         awayscore = game['awayscore']
-        print("home: ", homescore, "away: ", awayscore)
+        debug.info("home: " + str(homescore) + ", away: " + str(awayscore))
         # Refresh the data
         if self.data.needs_refresh:
             debug.info('Refresh game overview')

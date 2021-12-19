@@ -5,6 +5,11 @@ from rgbmatrix import RGBMatrix, RGBMatrixOptions
 from utils import args, led_matrix_options
 from data.data import Data
 import debug
+import logging
+
+logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format=" %(levelname)-8s %(asctime)s %(levelname)-8s %(message)s")
+# logging.getLogger('PIL.PngImagePlugin').setLevel(logging.WARNING)
+# logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
 
 SCRIPT_NAME = "NFL Scoreboard"
 SCRIPT_VERSION = "1.0.0"
@@ -23,7 +28,6 @@ debug.info("{} - v{} ({}x{})".format(SCRIPT_NAME, SCRIPT_VERSION, matrix.width, 
 
 # Read scoreboard options from config.json if it exists
 config = ScoreboardConfig("config", args)
-debug.set_debug_status(config)
 
 data = Data(config)
 
