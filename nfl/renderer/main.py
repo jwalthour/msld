@@ -181,15 +181,15 @@ class MainRenderer:
             self.canvas.SetImage(self.image, 0, 0)
             if self.data.helmet_logos:
                 # Open the logo image file
-                away_team_logo = Image.open('logos/{}H.png'.format(game['awayteam'])).resize((20, 20), 1)
-                home_team_logo = Image.open('logos/{}H.png'.format(game['hometeam'])).resize((20, 20), 1).transpose(Image.FLIP_LEFT_RIGHT)
+                away_team_logo = Image.open(get_file('logos/{}H.png'.format(game['awayteam']))).resize((20, 20), 1)
+                home_team_logo = Image.open(get_file('logos/{}H.png'.format(game['hometeam']))).resize((20, 20), 1).transpose(Image.FLIP_LEFT_RIGHT)
                 # Put the images on the canvas
                 self.canvas.SetImage(away_team_logo.convert("RGB"), 1, 12)
                 self.canvas.SetImage(home_team_logo.convert("RGB"), 43, 12)
             else:
                 # TEMP Open the logo image file
-                away_team_logo = Image.open('logos/{}.png'.format(game['awayteam'])).resize((20, 20), Image.BOX)
-                home_team_logo = Image.open('logos/{}.png'.format(game['hometeam'])).resize((20, 20), Image.BOX)
+                away_team_logo = Image.open(get_file('logos/{}.png'.format(game['awayteam']))).resize((20, 20), Image.BOX)
+                home_team_logo = Image.open(get_file('logos/{}.png'.format(game['hometeam']))).resize((20, 20), Image.BOX)
                 # Put the images on the canvas
                 self.canvas.SetImage(away_team_logo.convert("RGB"), 1, 12)
                 self.canvas.SetImage(home_team_logo.convert("RGB"), 43, 12)
@@ -269,15 +269,15 @@ class MainRenderer:
         self.canvas.SetImage(self.image, 0, 0)
         if self.data.helmet_logos:
             # Open the logo image file
-            away_team_logo = Image.open('logos/{}H.png'.format(game['awayteam'])).resize((20, 20), 1)
-            home_team_logo = Image.open('logos/{}H.png'.format(game['hometeam'])).resize((20, 20), 1).transpose(Image.FLIP_LEFT_RIGHT)
+            away_team_logo = Image.open(get_file('logos/{}H.png'.format(game['awayteam']))).resize((20, 20), 1)
+            home_team_logo = Image.open(get_file('logos/{}H.png'.format(game['hometeam']))).resize((20, 20), 1).transpose(Image.FLIP_LEFT_RIGHT)
             # Put the images on the canvas
             self.canvas.SetImage(away_team_logo.convert("RGB"), 1, 0)
             self.canvas.SetImage(home_team_logo.convert("RGB"), 43, 0)
         else:
             # TEMP Open the logo image file
-            away_team_logo = Image.open('logos/{}.png'.format(game['awayteam'])).resize((20, 20), Image.BOX)
-            home_team_logo = Image.open('logos/{}.png'.format(game['hometeam'])).resize((20, 20), Image.BOX)
+            away_team_logo = Image.open(get_file('logos/{}.png'.format(game['awayteam']))).resize((20, 20), Image.BOX)
+            home_team_logo = Image.open(get_file('logos/{}.png'.format(game['hometeam']))).resize((20, 20), Image.BOX)
             # Put the images on the canvas
             self.canvas.SetImage(away_team_logo.convert("RGB"), 1, 0)
             self.canvas.SetImage(home_team_logo.convert("RGB"), 43, 0)
