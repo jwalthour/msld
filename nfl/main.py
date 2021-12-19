@@ -4,6 +4,7 @@ from renderer.main import MainRenderer
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 from utils import args, led_matrix_options
 from data.data import Data
+import time
 import logging
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format=" %(levelname)-8s %(asctime)s %(message)s")
@@ -30,4 +31,9 @@ config = ScoreboardConfig("config", args)
 
 data = Data(config)
 
-MainRenderer(matrix, data).render()
+renderer = MainRenderer(matrix, data)
+renderer.init()
+while True:
+    delay = renderer.retrieve_data()
+    renderer.render()
+    time.sleep(delay)

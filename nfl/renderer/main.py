@@ -26,42 +26,48 @@ class MainRenderer:
         self.font = ImageFont.truetype("fonts/score_large.otf", 16)
         self.font_mini = ImageFont.truetype("fonts/04B_24__.TTF", 8)
 
-    def render(self):
-        while True:
-            self.starttime = t.time()
-            self.data.get_current_date()
-            self.__render_game()
+    def init(self):
+        """
+        Prepare to loop
+        """
+        self.starttime = t.time()
+        self.data.get_current_date()
 
-    def __render_game(self):
-        while True:
-            # If we need to refresh the overview data, do that
-            if self.data.needs_refresh:
+    def retrieve_data(self) -> float:
+        """
+        Retrieve data.
+        return: number of seconds to wait before next retrieval
+        """
+        endtime = t.time()
+        time_delta = endtime - self.starttime
+        rotate_rate = self.__rotate_rate_for_game(self.data.current_game())
+
+        # If we're ready to rotate, let's do it
+        # fix this u idiot
+        if time_delta >= rotate_rate:
+            self.starttime = t.time()
+            self.data.needs_refresh = True
+
+            if self.__should_rotate_to_next_game(self.data.current_game()):
+                game = self.data.advance_to_next_game()
+
+            if endtime - self.data.games_refresh_time >= GAMES_REFRESH_RATE:
                 self.data.refresh_games()
 
-            # Draw the current game
-            self.__draw_game(self.data.current_game())
+            if self.data.needs_refresh:
+                self.data.refresh_games()
+        
+        # If we need to refresh the overview data, do that
+        if self.data.needs_refresh:
+            self.data.refresh_games()
+        return self.data.config.scrolling_speed
+    
+    def render(self) -> None:
+        """
+        Draw the current game
+        """
+        self.__draw_game(self.data.current_game())
 
-            # Set the refresh rate
-            refresh_rate = self.data.config.scrolling_speed
-            t.sleep(refresh_rate)
-            endtime = t.time()
-            time_delta = endtime - self.starttime
-            rotate_rate = self.__rotate_rate_for_game(self.data.current_game())
-
-            # If we're ready to rotate, let's do it
-            # fix this u idiot
-            if time_delta >= rotate_rate:
-                self.starttime = t.time()
-                self.data.needs_refresh = True
-
-                if self.__should_rotate_to_next_game(self.data.current_game()):
-                    game = self.data.advance_to_next_game()
-
-                if endtime - self.data.games_refresh_time >= GAMES_REFRESH_RATE:
-                    self.data.refresh_games()
-
-                if self.data.needs_refresh:
-                    self.data.refresh_games()
 
     def __rotate_rate_for_game(self, game):
         rotate_rate = self.data.config.rotation_rates_live
