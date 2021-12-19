@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 import time as t
 from . import nfl_api_parser as nflparser
-import debug
+import logging
+logger = logging.getLogger(__name__)
 
 NETWORK_RETRY_SLEEP_TIME = 10.0
 
@@ -55,14 +56,14 @@ class Data:
                 break
             except Exception as e:
                 self.network_issues = True
-                debug.error("Networking error while refreshing the master list of games. {} retries remaining.".format(attempts_remaining))
-                debug.error("Exception: {}".format(e))
+                logger.error("Networking error while refreshing the master list of games. {} retries remaining.".format(attempts_remaining))
+                logger.error("Exception: {}".format(e))
                 attempts_remaining -= 1
                 t.sleep(NETWORK_RETRY_SLEEP_TIME)
             except ValueError:
                 self.network_issues = True
-                debug.error("Value Error while refreshing master list of games. {} retries remaining.".format(attempts_remaining))
-                debug.error("ValueError: Failed to refresh list of games")
+                logger.error("Value Error while refreshing master list of games. {} retries remaining.".format(attempts_remaining))
+                logger.error("ValueError: Failed to refresh list of games")
                 attempts_remaining -= 1
                 t.sleep(NETWORK_RETRY_SLEEP_TIME)
 
@@ -98,14 +99,14 @@ class Data:
     #             break
     #         except URLError, e:
     #             self.network_issues = True
-    #             debug.error("Networking Error while refreshing the current overview. {} retries remaining.".format(attempts_remaining))
-    #             debug.error("URLError: {}".format(e.reason))
+    #             logger.error("Networking Error while refreshing the current overview. {} retries remaining.".format(attempts_remaining))
+    #             logger.error("URLError: {}".format(e.reason))
     #             attempts_remaining -= 1
     #             time.sleep(NETWORK_RETRY_SLEEP_TIME)
     #         except ValueError:
     #             self.network_issues = True
-    #             debug.error("Value Error while refreshing current overview. {} retries remaining.".format(attempts_remaining))
-    #             debug.error("ValueError: Failed to refresh overview for {}".format(self.current_game().game_id))
+    #             logger.error("Value Error while refreshing current overview. {} retries remaining.".format(attempts_remaining))
+    #             logger.error("ValueError: Failed to refresh overview for {}".format(self.current_game().game_id))
     #             attempts_remaining -= 1
     #             time.sleep(NETWORK_RETRY_SLEEP_TIME)
 
@@ -144,7 +145,7 @@ class Data:
     # Debug info
 
     # def print_overview_debug(self):
-    #     debug.log("Overview Refreshed: {}".format(self.overview.id))
-    #     debug.log("Pre: {}".format(Pregame(self.overview, self.config.time_format)))
-    #     debug.log("Live: {}".format(Scoreboard(self.overview)))
-    #     debug.log("Final: {}".format(Final(self.current_game())))
+    #     logger.log("Overview Refreshed: {}".format(self.overview.id))
+    #     logger.log("Pre: {}".format(Pregame(self.overview, self.config.time_format)))
+    #     logger.log("Live: {}".format(Scoreboard(self.overview)))
+    #     logger.log("Final: {}".format(Final(self.current_game())))

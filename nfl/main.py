@@ -4,10 +4,9 @@ from renderer.main import MainRenderer
 from rgbmatrix import RGBMatrix, RGBMatrixOptions
 from utils import args, led_matrix_options
 from data.data import Data
-import debug
 import logging
-
-logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format=" %(levelname)-8s %(asctime)s %(levelname)-8s %(message)s")
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format=" %(levelname)-8s %(asctime)s %(message)s")
 # logging.getLogger('PIL.PngImagePlugin').setLevel(logging.WARNING)
 # logging.getLogger('urllib3.connectionpool').setLevel(logging.WARNING)
 
@@ -24,7 +23,7 @@ matrixOptions = led_matrix_options(args)
 matrix = RGBMatrix(options = matrixOptions)
 
 # Print some basic info on startup
-debug.info("{} - v{} ({}x{})".format(SCRIPT_NAME, SCRIPT_VERSION, matrix.width, matrix.height))
+logger.info("{} - v{} ({}x{})".format(SCRIPT_NAME, SCRIPT_VERSION, matrix.width, matrix.height))
 
 # Read scoreboard options from config.json if it exists
 config = ScoreboardConfig("config", args)

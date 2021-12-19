@@ -1,6 +1,8 @@
 from utils import get_file
 import json
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 DEFAULT_PREFERRED_TEAMS = ["BUF", "NO"]
 DEFAULT_SCROLLING_SPEED = 2
@@ -35,7 +37,7 @@ class ScoreboardConfig:
 
     def check_preferred_teams(self):
         if not isinstance(self.preferred_teams, str) and not isinstance(self.preferred_teams, list):
-            debug.warning("preferred_teams should be an array of team names or a single team name string. Using default preferred_teams, {}".format(DEFAULT_PREFERRED_TEAMS))
+            logger.warning("preferred_teams should be an array of team names or a single team name string. Using default preferred_teams, {}".format(DEFAULT_PREFERRED_TEAMS))
             self.preferred_teams = DEFAULT_PREFERRED_TEAMS
         if isinstance(self.preferred_teams, str):
             team = self.preferred_teams
@@ -47,7 +49,7 @@ class ScoreboardConfig:
                 rate = float(self.rotation_rates)
                 self.rotation_rates = {"live": rate, "final": rate, "pregame": rate}
             except:
-                debug.warning("rotation_rates should be a Dict or Float. Using default value. {}".format(DEFAULT_ROTATE_RATES))
+                logger.warning("rotation_rates should be a Dict or Float. Using default value. {}".format(DEFAULT_ROTATE_RATES))
                 self.rotation_rates = DEFAULT_ROTATE_RATES
 
         for key, value in list(self.rotation_rates.items()):
@@ -57,11 +59,11 @@ class ScoreboardConfig:
                 self.rotation_rates[key] = rate
             except:
                 # Use the default rotate rate if it fails
-                debug.warning("Unable to convert rotate_rates[\"{}\"] to a Float. Using default value. ({})".format(key, DEFAULT_ROTATE_RATE))
+                logger.warning("Unable to convert rotate_rates[\"{}\"] to a Float. Using default value. ({})".format(key, DEFAULT_ROTATE_RATE))
                 self.rotation_rates[key] = DEFAULT_ROTATE_RATE
 
             if self.rotation_rates[key] < MINIMUM_ROTATE_RATE:
-                debug.warning("rotate_rates[\"{}\"] is too low. Please set it greater than {}. Using default value. ({})".format(key, MINIMUM_ROTATE_RATE, DEFAULT_ROTATE_RATE))
+                logger.warning("rotate_rates[\"{}\"] is too low. Please set it greater than {}. Using default value. ({})".format(key, MINIMUM_ROTATE_RATE, DEFAULT_ROTATE_RATE))
                 self.rotation_rates[key] = DEFAULT_ROTATE_RATE
 
         # Setup some nice attributes to make sure they all exist

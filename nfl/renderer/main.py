@@ -5,8 +5,9 @@ from calendar import month_abbr
 from renderer.screen_config import screenConfig
 from datetime import datetime, timedelta
 import time as t
-import debug
 import re
+import logging
+logger = logging.getLogger(__name__)
 
 GAMES_REFRESH_RATE = 900.0
 
@@ -93,18 +94,18 @@ class MainRenderer:
         time = self.data.get_current_date()
         gametime = datetime.strptime(game['date'], "%Y-%m-%dT%H:%MZ")
         if time < gametime - timedelta(hours=1) and game['state'] == 'pre':
-            debug.info('Pre-Game State')
+            logger.info('Pre-Game State')
             self._draw_pregame(game)
         elif time < gametime and game['state'] == 'pre':
-            debug.info('Countdown til gametime')
+            logger.info('Countdown til gametime')
             self._draw_countdown(game)
         elif game['state'] == 'post':
-            debug.info('Final State')
+            logger.info('Final State')
             self._draw_post_game(game)
         else:
-            debug.info('Live State, checking every 5s')
+            logger.info('Live State, checking every 5s')
             self._draw_live_game(game)
-        debug.info('ping render_game')
+        logger.info('ping render_game')
 
     def _draw_pregame(self, game):
             time = self.data.get_current_date()
@@ -207,18 +208,18 @@ class MainRenderer:
     def _draw_live_game(self, game):
         homescore = game['homescore']
         awayscore = game['awayscore']
-        debug.info("home: " + str(homescore) + ", away: " + str(awayscore))
+        logger.info("home: " + str(homescore) + ", away: " + str(awayscore))
         # Refresh the data
         if self.data.needs_refresh:
-            debug.info('Refresh game overview')
+            logger.info('Refresh game overview')
             self.data.refresh_games()
             self.data.needs_refresh = False
         # Use this code if you want the animations to run
         if game['homescore'] > homescore + 5 or game['awayscore'] > awayscore + 5:
-            debug.info('should draw TD')
+            logger.info('should draw TD')
             self._draw_td()
         elif game['homescore'] > homescore + 2 or game['awayscore'] > awayscore + 2:
-            debug.info('should draw FG')
+            logger.info('should draw FG')
             self._draw_fg()
         # Prepare the data
         # score = '{}-{}'.format(overview['awayscore'], overview['homescore'])
@@ -299,7 +300,7 @@ class MainRenderer:
         self.draw = ImageDraw.Draw(self.image)
         # Check if the game is over
         if game['state'] == 'post':
-            debug.info('GAME OVER')
+            logger.info('GAME OVER')
         # Save the scores.
         # awayscore = game['awayscore']
         # homescore = game['homescore']
@@ -353,7 +354,7 @@ class MainRenderer:
         self.draw = ImageDraw.Draw(self.image)
 
     def _draw_td(self):
-        debug.info('TD')
+        logger.info('TD')
         # Load the gif file
         ball = Image.open("assets/td_ball.gif")
         words = Image.open("assets/td_words.gif")
@@ -387,7 +388,7 @@ class MainRenderer:
             t.sleep(0.05)
 
     def _draw_fg(self):
-        debug.info('FG')
+        logger.info('FG')
         # Load the gif file
         im = Image.open("assets/fg.gif")
         # Set the frame index to 0

@@ -2,10 +2,11 @@ from rgbmatrix import RGBMatrixOptions, graphics
 import collections
 import argparse
 import os
-import debug
 import datetime
 from tzlocal import get_localzone
 import pytz
+import logging
+logger = logging.getLogger(__name__)
 
 # get local timezone
 local_tz = get_localzone()
@@ -65,8 +66,8 @@ def led_matrix_options(args):
   try:
     options.pixel_mapper_config = args.led_pixel_mapper
   except AttributeError:
-    debug.warning("Your compiled RGB Matrix Library is out of date.")
-    debug.warning("The --led-pixel-mapper argument will not work until it is updated.")
+    logger.warning("Your compiled RGB Matrix Library is out of date.")
+    logger.warning("The --led-pixel-mapper argument will not work until it is updated.")
 
   if args.led_show_refresh:
     options.show_refresh_rate = 1
