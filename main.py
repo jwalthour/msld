@@ -35,14 +35,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     add_rpi_display_args(parser)
     add_nfl_args(parser)
+    parser.add_argument('--stdio-btns', action='store_true')
     args = parser.parse_args()
-
 
     cur_sport: Sport = Sport.NONE
     requested_sport: Sport = Sport.NFL
 
-    # Starts input threads
-    input_listener = InputListener()
+    # For some reason, we get a raspberry pi GPIO error
+    # if this is initialized after the RGBMatrix.
+    # Everything seems happy to coexist as long as this one's started first.
+    input_listener = InputListener(args.stdio_btns)
     def btn_pressed(btn: int) -> None:
         """
         A button was pressed
@@ -59,6 +61,7 @@ if __name__ == "__main__":
         btn_event.set()
     input_listener.btn_cb = btn_pressed
     input_listener.exit_cb = exit
+    
     # Check for led configuration arguments
     matrixOptions = led_matrix_options(args)
 

@@ -23,12 +23,13 @@ class InputListener():
     exit_cb:typing.Callable[[],None] = None
     btn_cb:typing.Callable[[int], None] = None
 
-    def __init__(self) -> None:
+    def __init__(self, listen_to_stdio: bool = False) -> None:
         for pin in BCM_PIN_FOR_BTN:
             GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             GPIO.add_event_detect(pin, GPIO.FALLING, callback=self._falling_edge)
-        self._kt = threading.Thread(target=self._key_listener_thread, daemon=True)
-        self._kt.start()
+        if listen_to_stdio:
+            self._kt = threading.Thread(target=self._key_listener_thread, daemon=True)
+            self._kt.start()
 
     def _key_listener_thread(self):
         logger.info("Listening for keys")
