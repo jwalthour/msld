@@ -1,8 +1,8 @@
-from bases import Bases
-from inning import Inning
-from pitches import Pitches
-from outs import Outs
-from team import Team
+from .bases import Bases
+from .inning import Inning
+from .pitches import Pitches
+from .outs import Outs
+from .team import Team
 import datetime
 import debug
 

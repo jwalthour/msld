@@ -1,4 +1,4 @@
-from inning import Inning
+from .inning import Inning
 
 class Status:
 

@@ -2,10 +2,10 @@ import debug
 import time
 import feedparser
 from datetime import datetime
-from dates import Dates
+from .dates import Dates
 
 try:
-  from HTMLParser import HTMLParser
+  from html.parser import HTMLParser
 except ImportError:
   from html.parser import HTMLParser
 
