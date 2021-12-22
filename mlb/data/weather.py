@@ -31,11 +31,13 @@ class Weather:
   # Return true if we have valid weather data available.
   # If we have a valid temp, we should be able to assume wind/conditions also exist
   def available(self):
+    return False
     return self.temp != None
 
   # Make a call to the open weather maps API and update our instance variables
   # Pass True if you need to ignore the update rate (like for our first update)
   def update(self, force=False):
+    return True
     if force == True or self.__should_update():
       debug.log("Weather should update!")
       self.starttime = time.time()
@@ -50,11 +52,11 @@ class Weather:
           self.conditions = weather.get_status()
           self.icon_name = weather.get_weather_icon_name()
           debug.log("Weather: {}; Wind: {}; {} ({})".format(self.temperature_string(), self.wind_string(), self.conditions, self.icon_filename()))
-        except pyowm.exceptions.api_response_error.UnauthorizedError:
+        except pyowm.commons.exceptions.UnauthorizedError:
           debug.warning("[WEATHER] The API key provided doesn't appear to be valid. Please check your config.json.")
           debug.warning("[WEATHER] You can get a free API key by visiting https://home.openweathermap.org/users/sign_up")
           self.apikey_valid = False
-        except (pyowm.exceptions.api_call_error.APICallTimeoutError, pyowm.exceptions.api_call_error.APICallError, pyowm.exceptions.api_call_error.APIInvalidSSLCertificateError, pyowm.exceptions.api_call_error.BadGatewayError) as e:
+        except (pyowm.commons.exceptions.TimeoutError, pyowm.commons.exceptions.APIRequestError, pyowm.commons.exceptions.APIResponseError, pyowm.commons.exceptions.BadGatewayError) as e:
           debug.warning("[WEATHER] Fetching weather information failed from a connection issue.")
           debug.log("[WEATHER] Error Message: {}".format(e))
           # Set some placeholder weather info if this is our first weather update
