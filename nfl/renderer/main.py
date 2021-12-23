@@ -74,9 +74,9 @@ class MainRenderer(Renderer):
 
     def __rotate_rate_for_game(self, game):
         rotate_rate = self.data.config.rotation_rates_live
-        if game['state'] == 'pre':
+        if game is None or game['state'] == 'pre':
             rotate_rate = self.data.config.rotation_rates_pregame
-        if game['state'] == 'post':
+        elif game['state'] == 'post':
             rotate_rate = self.data.config.rotation_rates_final
         return rotate_rate
 
