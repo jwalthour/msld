@@ -1,5 +1,6 @@
 [Unit]
 Description=Multi-Sport LED Display
+After=mnt-config.mount mnt-source.mount
 
 [Service]
 ExecStart=/mnt/source/msld/system_files/start.sh

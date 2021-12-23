@@ -7,11 +7,13 @@ from datetime import datetime, timedelta
 import time as t
 import re
 import logging
+
+from renderer import Renderer
 logger = logging.getLogger(__name__)
 
 GAMES_REFRESH_RATE = 900.0
 
-class MainRenderer:
+class MainRenderer(Renderer):
     def __init__(self, matrix, data):
         self.matrix = matrix
         self.data = data
@@ -30,6 +32,7 @@ class MainRenderer:
         """
         Prepare to loop
         """
+        self.data.refresh_games()
         self.starttime = t.time()
         self.data.get_current_date()
 

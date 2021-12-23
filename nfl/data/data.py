@@ -11,6 +11,8 @@ class Data:
         # Save the parsed config
         self.config = config
 
+        self.games = None
+
         # Flag to determine when to refresh data
         self.needs_refresh = True
 
@@ -77,7 +79,10 @@ class Data:
         return gametime
 
     def current_game(self):
-        return self.games[self.current_game_index]
+        if self.games is None:
+            return None
+        else:
+            return self.games[self.current_game_index]
 
     # def update_scores(self, homescore, awayscore):
     #     self.scores[self.current_game_index] = {'home': homescore, 'away': awayscore}
