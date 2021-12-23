@@ -44,23 +44,23 @@ if __name__ == "__main__":
     # For some reason, we get a raspberry pi GPIO error
     # if this is initialized after the RGBMatrix.
     # Everything seems happy to coexist as long as this one's started first.
-    input_listener = InputListener(args.stdio_btns)
-    def btn_pressed(btn: int) -> None:
-        """
-        A button was pressed
-        btn: int, [0,3], 0 is topmost button
-        """
-        global requested_sport
-        if btn == BTN_NFL:
-            requested_sport = Sport.NFL
-        elif btn == BTN_MLB:
-            requested_sport = Sport.MLB
-        btn_event.set()
-    def exit() -> None:
-        exit_event.set()
-        btn_event.set()
-    input_listener.btn_cb = btn_pressed
-    input_listener.exit_cb = exit
+    # input_listener = InputListener(args.stdio_btns)
+    # def btn_pressed(btn: int) -> None:
+    #     """
+    #     A button was pressed
+    #     btn: int, [0,3], 0 is topmost button
+    #     """
+    #     global requested_sport
+    #     if btn == BTN_NFL:
+    #         requested_sport = Sport.NFL
+    #     elif btn == BTN_MLB:
+    #         requested_sport = Sport.MLB
+    #     btn_event.set()
+    # def exit() -> None:
+    #     exit_event.set()
+    #     btn_event.set()
+    # input_listener.btn_cb = btn_pressed
+    # input_listener.exit_cb = exit
     
     # Check for led configuration arguments
     matrixOptions = led_matrix_options(args)
