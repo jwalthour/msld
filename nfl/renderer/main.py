@@ -80,7 +80,12 @@ class MainRenderer(Renderer):
             rotate_rate = self.data.config.rotation_rates_final
         return rotate_rate
 
-    def __should_rotate_to_next_game(self, game):
+    def __should_rotate_to_next_game(self, game) -> bool:
+        # TODO: I believe the "fix this u idiot" and "figure this out later heh" comments regard this method.
+        # Right now no live code asks if a preferred team is actively playing. I believe that's what Mike Milton intended to figure out later.
+        # -- jwalthour
+        return self.data.config.rotation_enabled
+
         if self.data.config.rotation_enabled == False:
             return False
 
