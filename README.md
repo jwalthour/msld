@@ -13,3 +13,11 @@ A huge thanks to the following:
 ![](photos/together-front-left.jpg)
 ![](photos/together-back.jpg)
 ![](photos/together-right.jpg)
+
+## How to build your own
+
+[Electrical](electrical/Electrical notes.md)
+
+[Mechanical](mechanical/Mechanical notes.md)
+
+[Software](Installation.md)

@@ -1,5 +1,8 @@
 
 # Software setup notes
+
+TODO: this needs a lot of details added
+
 * Installed python3 and uninstalled python2 prior to installing the rpi module
 * These commands were used to install python3 and the rgb-led-matrix library:
 ````bash
