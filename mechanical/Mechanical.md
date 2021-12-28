@@ -56,7 +56,7 @@ Install perma proto board.  Install buttons and connect them.
 
 ![Wired buttons](../photos/buttons-wired-to-proto-board.jpg)
 
-![Buttons](../photos/buttons exterior view.jpg)
+![Buttons](../photos/buttons-exterior-view.jpg)
 
 Connect all wiring (you'll need to have the backshell close to the LED panel to do this.  Use a wire anchor and zipties to keep wires from rattling around too much.
 

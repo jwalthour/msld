@@ -16,8 +16,8 @@ A huge thanks to the following:
 
 ## How to build your own
 
-[Electrical](electrical/Electrical notes.md)
+[Electrical](electrical/Electrical.md)
 
-[Mechanical](mechanical/Mechanical notes.md)
+[Mechanical](mechanical/Mechanical.md)
 
 [Software](Installation.md)
