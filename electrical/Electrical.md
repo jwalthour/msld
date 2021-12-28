@@ -4,6 +4,7 @@
 
 1. Solder a short wire between GPIO pins 4 and 18 (Directions from here: https://github.com/hzeller/rpi-rgb-led-matrix/tree/6668ff8b55fcfe5ea36cf22aa48155c9ced177a9#improving-flicker)
 1. Solder a male header pin onto each of these GPIO pins for the buttons: [14,15,25,19]
+1. Solder a male header pin onto a 3.3V pin and to a GND pin
 
 Should look like this when done:
 
