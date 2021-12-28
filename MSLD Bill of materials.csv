@@ -1,0 +1,20 @@
+Description,Source,PN,Link,Qty required,Notes
+Debouncer,Digi-key,2978-LS19-P-ND,https://www.digikey.com/en/products/detail/logiswitch/LS19-P/13540840,1,
+Pins,Digi-key,WM50014-36-ND,https://www.digikey.com/en/products/detail/molex/0022284360/313821,1,
+Housings,Digi-key,952-2228-ND,https://www.digikey.com/en/products/detail/harwin-inc/M20-1060300/3728192,4,
+Contacts,Digi-key,952-2157-1-ND,https://www.digikey.com/en/products/detail/harwin-inc/M20-1160042/3728123,12,"Don't be dumb, buy a 100pk"
+Buttons,Digi-key,EG2001-ND,https://www.digikey.com/en/products/detail/e-switch/PS1023ABLK/82862,4,
+Raspberry Pi Model 4B,,,,1,Any RAM size
+RGB Matrix HAT + RTC for Raspberry Pi - Mini Kit,Adafruit,2345,https://www.adafruit.com/product/2345,1,
+CR1220 12mm Diameter - 3V Lithium Coin Cell Battery,Adafruit,380,https://www.adafruit.com/product/380,1,
+5V 4A (4000mA) switching power supply,Adafruit,1466,https://www.adafruit.com/product/1466,1,
+64x32 RGB LED Matrix - 6mm pitch,Adafruit,2276,https://www.adafruit.com/product/2276,1,STLs are sized for the 6mm pitch version
+Adafruit Perma-Proto Half-sized Breadboard PCB ,Adafruit,1609,https://www.adafruit.com/product/1609,1,
+"Threaded inserts, m2.5x0.45mm",McMaster-Carr,94180A321,https://www.mcmaster.com/94180A321/,6,"Don't be dumb, buy a 100pk"
+"Screws, M2.5 x0.45x4mm",McMaster-Carr,92000A102,https://www.mcmaster.com/catalog/92000A102,6,"Don't be dumb, buy a 100pk"
+"Screws, M3x0.5x6mm",McMaster-Carr,92005A116,https://www.mcmaster.com/catalog/92005A116,8,"Don't be dumb, buy a 100pk"
+Brass M2.5 Standoffs for Pi HATs - Black Plated - Pack of 2,Adafruit,2336,https://www.adafruit.com/product/2336,2,For 4 total standoffs
+"Hookup wire, ~20AWG, red, stranded",,,,about 2ft,
+"Hookup wire, ~20AWG, black, stranded",,,,about 2ft,
+"Hookup wire, ~20AWG, green, stranded",,,,about 8ft,
+"Ribbon, about 5mm wide",,,,,Or string or something.  Only required to use the hanging holes in the back.
