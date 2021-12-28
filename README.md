@@ -9,7 +9,7 @@ A huge thanks to the following:
 * Github user hzeller for the RGB matrix driver: https://github.com/hzeller/rpi-rgb-led-matrix/
 
 
-![perma proto board](photos/proto board soldered.jpg)
+![perma proto board](photos/proto-board-soldered.jpg)
 
 
 

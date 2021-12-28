@@ -13,7 +13,7 @@ Should look like this when done:
 
 1. Solder debounce chip as shown in the image below.  Inputs go to a header on one side, outputs and power in on the other.
 
-![perma proto board](../photos/proto board soldered.jpg)
+![](../photos/proto-board-soldered.jpg)
 
 ## Buttons
 
