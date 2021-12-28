@@ -7,7 +7,7 @@
 
 Should look like this when done:
 
-![Pi hat, modified](../photos/pins and mod to hat.png)
+![Pi hat, modified](../photos/pins-and-mod-to-hat.png)
 
 ## Adafruit perma proto board
 
@@ -23,9 +23,9 @@ Note: I used green for signal wires.  Use whatever color you want; I'm not your 
 1. Solder one of each color wire to each button, and cover terminals with heatshrink.
 1. Crimp a rectangular header socket contact to each wire, and slide into pins 1 and 3 of a 3-position housing.  This will allow the buttons to connect between the ground and signal headers on the proto board.
 
-![Buttons connected](../photos/buttons wired to proto board.jpg)
+![Buttons connected](../photos/buttons-wired-to-proto-board.jpg)
 
-![Buttons, exterior view](../photos/buttons exterior view.jpg)
+![Buttons, exterior view](../photos/buttons-exterior-view.jpg)
 
 ## Debouncer-to-Pi-hat cable
 
@@ -34,13 +34,13 @@ Note: I used green for signal wires.  Use whatever color you want; I'm not your 
 1. On one end, use either a 6 position housing or qty2 3position housings.  See image of proto board.
 1. The other end has to go to a bunch of different places on the pi hat.  I just wrapped each contact in heatshrink.
 
-![Buttons, exterior view](../photos/wiring harness in backshell.jpg)
+![Buttons, exterior view](../photos/wiring-harness-in-backshell.jpg)
 
 ## LED panel power cable
 
 The kit from Adafruit for me came with a cable with spade connectors.  I don't like to have that much exposed energized conductor surface.  So I cut off half of each spade, removed the old heatshrink, and added new heatshrink that went further along the spade.  I also bent each spade.  You could also buy ferrules and re-crimp.
 
-![Spades before heatshrink](../photos/spade connectors cut in half.jpg)
+![Spades before heatshrink](../photos/spade-connectors-cut-in-half.jpg)
 
-![Spades after heatshrink](../photos/spade connectors with heatshrink.jpg)
+![Spades after heatshrink](../photos/spade-connectors-with-heatshrink.jpg)
 

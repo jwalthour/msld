@@ -2,7 +2,7 @@
 
 ## Printing
 
-The backshell prints in three parts: left, right, and center.  These are from the viewer's perspective - "left" has the button holes, "right" has the Pi.
+The backshell prints in three parts: left, right, and center.  These are from the viewer's perspective - "left" has the button holes, "right" has the Pi.  STL files for all three are found in this directory.
 
 Print settings I used common to all three parts:
 * PLA
