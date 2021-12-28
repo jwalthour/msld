@@ -9,6 +9,9 @@ A huge thanks to the following:
 * Github user hzeller for the RGB matrix driver: https://github.com/hzeller/rpi-rgb-led-matrix/
 
 
+![perma proto board](photos/proto board soldered.jpg)
+
+
 
 ## Software setup notes
 * Installed python3 and uninstalled python2 prior to installing the rpi module
