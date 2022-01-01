@@ -23,6 +23,8 @@ BTN_MLB = 1
 BTN_BRIGHTER = 2
 BTN_DIMMER = 3
 
+ERROR_RETRY_S = 10
+
 class Sport(Enum):
     NFL = 'NFL'
     MLB = "MLB"
@@ -84,11 +86,23 @@ if __name__ == "__main__":
     while not exit_event.is_set():
         if requested_sport != cur_sport:
             logger.info("Changing sport from %r to %r."%(cur_sport, requested_sport))
-            renderers[requested_sport].init()
-            cur_sport = requested_sport
+            try:
+                renderers[requested_sport].init()
+                cur_sport = requested_sport
+            except:
+                logger.error("Uncaught exception in renderer.init(): ", exc_info=True)
 
-        delay = renderers[cur_sport].retrieve_data()
-        renderers[cur_sport].render()
+        try:
+            delay = renderers[cur_sport].retrieve_data()
+        except:
+            logger.error("Uncaught exception in renderer.retrieve_data(): ", exc_info=True)
+            delay = ERROR_RETRY_S
+
+        try:
+            renderers[cur_sport].render()
+        except:
+            logger.error("Uncaught exception in renderer.render(): ", exc_info=True)
+            
         btn_event.wait(delay)
         if btn_event.is_set():
             btn_event.clear()
