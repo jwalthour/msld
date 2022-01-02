@@ -122,7 +122,7 @@ class Data:
     #         self.advance_to_next_game()
 
     def advance_to_next_game(self):
-        self.current_game_index = self.__next_game_index()
+        self.current_game_index = (self.current_game_index + 1) % self._priority_game_count
         return self.current_game()
 
     # def game_index_for_preferred_team(self):
@@ -161,11 +161,11 @@ class Data:
     #         print(game)
     #     return team_index
 
-    def __next_game_index(self):
-        counter = self.current_game_index + 1
-        if counter >= len(self.games):
-            counter = 0
-        return counter
+    # def __next_game_index(self):
+    #     counter = self.current_game_index + 1
+    #     if counter >= len(self.games):
+    #         counter = 0
+    #     return counter
 
     def _get_prioritized_games_store_count(self, all_games: typing.List) -> typing.List:
         """
@@ -187,17 +187,23 @@ class Data:
         upcoming_games = Data._get_games_with_status(all_games, 'pre')
         finished_games = Data._get_games_with_status(all_games, 'post')
 
+        prioritized_list = games_in_prog_preferred + games_in_prog_unpreferred + upcoming_games + finished_games
+
         # Locate the highest priority list and note its length
         if len(games_in_prog_preferred) > 0:
             self._priority_game_count = len(games_in_prog_preferred)
+            logger.debug("%d preferred-team games are active of %d total games"%(self._priority_game_count, len(prioritized_list)))
         elif len(games_in_prog_unpreferred) > 0:
             self._priority_game_count = len(games_in_prog_unpreferred)
+            logger.debug("%d unpreferred-team games are active of %d total games"%(self._priority_game_count, len(prioritized_list)))
         elif len(upcoming_games) > 0:
             self._priority_game_count = len(upcoming_games)
+            logger.debug("%d games are upcoming of %d total games"%(self._priority_game_count, len(prioritized_list)))
         else:
             self._priority_game_count = len(finished_games)
+            logger.debug("%d == %d total games are finished"%(self._priority_game_count, len(prioritized_list)))
 
-        return games_in_prog_preferred + games_in_prog_unpreferred + upcoming_games + finished_games
+        return prioritized_list
 
     #
     # Debug info
