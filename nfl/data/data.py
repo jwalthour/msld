@@ -1,12 +1,16 @@
 from datetime import datetime, timedelta
 import time as t
+import typing
 from . import nfl_api_parser as nflparser
 import logging
 logger = logging.getLogger(__name__)
 
 NETWORK_RETRY_SLEEP_TIME = 10.0
+NUM_RETRIES = 5
 
 class Data:
+    _priority_game_count: int = 0
+
     def __init__(self, config):
         # Save the parsed config
         self.config = config
@@ -36,22 +40,20 @@ class Data:
     def get_current_date(self):
         return datetime.utcnow()
     
-    def refresh_game(self):
-        self.game = self.choose_game()
-        self.needs_refresh = False
+    # def refresh_game(self):
+    #     self.game = self.choose_game()
+    #     self.needs_refresh = False
 
     def refresh_games(self):
-        attempts_remaining = 5
+        """
+        Download game data from the ESPN NFL API.
+        May block for a very long time during retries.
+        """
+        attempts_remaining = NUM_RETRIES
         while attempts_remaining > 0:
             try:
                 all_games = nflparser.get_all_games()
-                if self.config.rotation_only_preferred:
-                    self.games = self.__filter_list_of_games(all_games, self.config.preferred_teams)
-                # if rotation is disabled, only look at the first team in the list of preferred teams
-                elif not self.config.rotation_enabled:
-                    self.games = self.__filter_list_of_games(all_games, [self.config.preferred_teams[0]])
-                else:
-                    self.games = all_games
+                self.games = self._get_prioritized_games_store_count(all_games)
 
                 self.games_refresh_time = t.time()
                 self.network_issues = False
@@ -69,9 +71,9 @@ class Data:
                 attempts_remaining -= 1
                 t.sleep(NETWORK_RETRY_SLEEP_TIME)
 
-    #     # If we run out of retries, just move on to the next game
-        if attempts_remaining <= 0 and self.config.rotation_enabled:
-            self.advance_to_next_game()
+        # # If we run out of retries, just move on to the next game
+        # if attempts_remaining <= 0 and self.config.rotation_enabled:
+        #     self.advance_to_next_game()
 
     def get_gametime(self):
         tz_diff = t.timezone if (t.localtime().tm_isdst == 0) else t.altzone
@@ -128,9 +130,28 @@ class Data:
     #         return self.__game_index_for(self.config.preferred_teams[0])
     #     else:
     #         return 0
-
-    def __filter_list_of_games(self, games, teams):
+    @staticmethod
+    def _get_games_involving_teams(games: typing.List, teams: typing.List[str]):
+        """
+        Return the subset of given games that involve at least one of the listed teams.
+        """
         return list(game for game in games if set([game['awayteam'], game['hometeam']]).intersection(set(teams)))
+
+    @staticmethod
+    def _get_games_not_involving_teams(games: typing.List, teams: typing.List[str]):
+        """
+        Return the subset of given games that involve none of the listed teams.
+        """
+        return list(game for game in games if not set([game['awayteam'], game['hometeam']]).intersection(set(teams)))
+
+    @staticmethod
+    def _get_games_with_status(games: typing.List, state: str) -> typing.List:
+        """
+        Return the subset of given games that have the given state.
+
+        state: str, should be one of: ['pre', 'post', 'in']
+        """
+        return list(game for game in games if game['state'] == state)
 
     # def __game_index_for(self, team_name):
     #     team_index = 0
@@ -145,6 +166,38 @@ class Data:
         if counter >= len(self.games):
             counter = 0
         return counter
+
+    def _get_prioritized_games_store_count(self, all_games: typing.List) -> typing.List:
+        """
+        Take a list of all games from the NFL API and return a prioritized version. (shallow copied)
+        Also stores the length of the highest priority category.
+
+
+        Priorities:
+            1. Active games involving preferred teams
+            2. Active games without preferred teams
+            3. Upcoming games
+            4. Completed games
+        """
+        games_in_progress = Data._get_games_with_status(all_games, 'in')
+        # Split the list of games in progress
+        games_in_prog_preferred = Data._get_games_involving_teams(games_in_progress, self.config.preferred_teams)
+        games_in_prog_unpreferred = Data._get_games_not_involving_teams(games_in_progress, self.config.preferred_teams)
+
+        upcoming_games = Data._get_games_with_status(all_games, 'pre')
+        finished_games = Data._get_games_with_status(all_games, 'post')
+
+        # Locate the highest priority list and note its length
+        if len(games_in_prog_preferred) > 0:
+            self._priority_game_count = len(games_in_prog_preferred)
+        elif len(games_in_prog_unpreferred) > 0:
+            self._priority_game_count = len(games_in_prog_unpreferred)
+        elif len(upcoming_games) > 0:
+            self._priority_game_count = len(upcoming_games)
+        else:
+            self._priority_game_count = len(finished_games)
+
+        return games_in_prog_preferred + games_in_prog_unpreferred + upcoming_games + finished_games
 
     #
     # Debug info

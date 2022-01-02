@@ -1,5 +1,7 @@
 from PIL import Image, ImageFont, ImageDraw, ImageSequence
 from rgbmatrix import graphics
+import rgbmatrix
+from nfl.data.data import Data
 from nfl.utils import center_text, get_file
 from calendar import month_abbr
 from nfl.renderer.screen_config import screenConfig
@@ -14,6 +16,9 @@ logger = logging.getLogger(__name__)
 GAMES_REFRESH_RATE = 900.0
 
 class MainRenderer(Renderer):
+    data: Data = None
+    matrix: rgbmatrix.RGBMatrix = None
+
     def __init__(self, matrix, data):
         self.matrix = matrix
         self.data = data
