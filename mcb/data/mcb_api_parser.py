@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-URL = "http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
+URL="http://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard"
 
 # def get_game(team_name):
 #     for i in range(5):
@@ -45,9 +45,10 @@ def get_all_games():
             game = {'name': g['shortName'], 'date': g['date'],
                     'hometeam': info['competitors'][0]['team']['abbreviation'], 'homeid': info['competitors'][0]['id'], 'homescore': int(info['competitors'][0]['score']),
                     'awayteam': info['competitors'][1]['team']['abbreviation'], 'awayid': info['competitors'][1]['id'], 'awayscore': int(info['competitors'][1]['score']),
-                    'down': info.get('situation', {}).get('shortDownDistanceText'), 'spot': info.get('situation', {}).get('possessionText'),
+                    # 'down': info.get('situation', {}).get('shortDownDistanceText'), 'spot': info.get('situation', {}).get('possessionText'),
                     'time': info['status']['displayClock'], 'quarter': info['status']['period'], 'over': info['status']['type']['completed'],
-                    'redzone': info.get('situation', {}).get('isRedZone'), 'possession': info.get('situation', {}).get('possession'), 'state': info['status']['type']['state']}
+                    # 'redzone': info.get('situation', {}).get('isRedZone'), 'possession': info.get('situation', {}).get('possession'),
+                     'state': info['status']['type']['state']}
             games.append(game)
             # i += 1
         return games
