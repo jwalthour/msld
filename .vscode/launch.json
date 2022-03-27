@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "MSLD",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "console": "integratedTerminal",
+            "sudo": true,
+            "args": [
+                "--led-gpio-mapping=adafruit-hat-pwm",
+                "--led-rows=32",
+                "--led-cols=64",
+                "--led-slowdown-gpio=2",
+                "--led-row-addr-type=0",
+                "--led-brightness=50",
+            ]
+        }
+    ]
+}

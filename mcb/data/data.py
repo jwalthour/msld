@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import time as t
 import typing
-from . import nfl_api_parser as nflparser
+from . import mcb_api_parser as mcbparser
 import logging
 logger = logging.getLogger(__name__)
 
@@ -46,13 +46,13 @@ class Data:
 
     def refresh_games(self):
         """
-        Download game data from the ESPN NFL API.
+        Download game data from the ESPN sports API.
         May block for a very long time during retries.
         """
         attempts_remaining = NUM_RETRIES
         while attempts_remaining > 0:
             try:
-                all_games = nflparser.get_all_games()
+                all_games = mcbparser.get_all_games()
                 self.games = self._get_prioritized_games_store_count(all_games)
 
                 self.games_refresh_time = t.time()

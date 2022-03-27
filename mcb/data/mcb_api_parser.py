@@ -1,7 +1,7 @@
 import requests
 import datetime
 import time as t
-from nfl.utils import convert_time
+from mcb.utils import convert_time
 import logging
 logger = logging.getLogger(__name__)
 
@@ -49,6 +49,10 @@ def get_all_games():
                     'time': info['status']['displayClock'], 'period': info['status']['period'], 'over': info['status']['type']['completed'],
                     # 'redzone': info.get('situation', {}).get('isRedZone'), 'possession': info.get('situation', {}).get('possession'),
                      'state': info['status']['type']['state']}
+            # For testing with NFL logos until I get the real ones
+            game['awayteam'] = 'NE'
+            game['hometeam'] = 'NE'
+
             games.append(game)
             # i += 1
         return games

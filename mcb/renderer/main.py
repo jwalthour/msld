@@ -1,10 +1,10 @@
 from PIL import Image, ImageFont, ImageDraw, ImageSequence
 from rgbmatrix import graphics
 import rgbmatrix
-from nfl.data.data import Data
-from nfl.utils import center_text, get_file
+from mcb.data.data import Data
+from mcb.utils import center_text, get_file
 from calendar import month_abbr
-from nfl.renderer.screen_config import screenConfig
+from mcb.renderer.screen_config import screenConfig
 from datetime import datetime, timedelta
 import time as t
 import re
@@ -237,6 +237,10 @@ class MainRenderer(Renderer):
         if game is None:
             return
 
+        # For testing with NFL logos until I get the real ones
+        game['awayteam'] = 'NE'
+        game['hometeam'] = 'NE'
+
         homescore = game['homescore']
         awayscore = game['awayscore']
         logger.info("home: " + str(homescore) + ", away: " + str(awayscore))
@@ -254,27 +258,8 @@ class MainRenderer(Renderer):
             self._draw_fg()
         # Prepare the data
         # score = '{}-{}'.format(overview['awayscore'], overview['homescore'])
-        if game['possession'] == game['awayid']:
-            pos = game['awayteam']
-        else:
-            pos = game['hometeam']
-        quarter = str(game['quarter'])
+        period = str(game['period'])
         time_period = game['time']
-        # this is ugly but I want to replace the possession info with down info and spot info
-        down = None
-        spot = None
-        game_info = None
-        if game['down']:
-            down = re.sub(r"[a-z]+", "", game['down']).replace(" ", "")
-            info_pos = center_text(self.font_mini.getsize(str(down))[0], 32)
-            self.draw.multiline_text((info_pos, 19), str(down), fill=(255, 255, 255), font=self.font_mini, align="center")
-        if game['spot']:
-            spot = game['spot'].replace(" ", "")
-            info_pos = center_text(self.font_mini.getsize(spot)[0], 32)
-            self.draw.multiline_text((info_pos, 25), spot, fill=(255, 255, 255), font=self.font_mini, align="center")
-        pos_colour = (255, 255, 255)
-        if game['redzone']:
-            pos_colour = (255, 25, 25)
         # Set the position of the information on screen.
         homescore = '{0:02d}'.format(homescore)
         awayscore = '{0:02d}'.format(awayscore)
@@ -283,10 +268,8 @@ class MainRenderer(Renderer):
         away_score_pos = center_text(self.font.getsize(awayscore)[0], 48)
         time_period_pos = center_text(self.font_mini.getsize(time_period)[0], 32)
         # score_position = center_text(self.font.getsize(score)[0], 32)
-        quarter_position = center_text(self.font_mini.getsize(quarter)[0], 32)
-        info_pos = center_text(self.font_mini.getsize(pos)[0], 32)
-        self.draw.multiline_text((info_pos, 13), pos, fill=pos_colour, font=self.font_mini, align="center")
-        self.draw.multiline_text((quarter_position, 0), quarter, fill=(255, 255, 255), font=self.font_mini, align="center")
+        period_position = center_text(self.font_mini.getsize(period)[0], 32)
+        self.draw.multiline_text((period_position, 0), period, fill=(255, 255, 255), font=self.font_mini, align="center")
         self.draw.multiline_text((time_period_pos, 6), time_period, fill=(255, 255, 255), font=self.font_mini, align="center")
         self.draw.multiline_text((6, 19), awayscore, fill=(255, 255, 255), font=self.font, align="center")
         self.draw.multiline_text((59 - home_score_size, 19), homescore, fill=(255, 255, 255), font=self.font, align="center")
@@ -316,7 +299,7 @@ class MainRenderer(Renderer):
         # away_team_logo = Image.open('logos/{}.png'.format(game['awayteam'])).resize((19, 19), 1)
         # home_team_logo = Image.open('logos/{}.png'.format(game['hometeam'])).resize((19, 19), 1)
         # Draw the text on the Data image.
-        # self.draw.multiline_text((quarter_position, 0), quarter, fill=(255, 255, 255), font=self.font_mini, align="center")
+        # self.draw.multiline_text((period_position, 0), period, fill=(255, 255, 255), font=self.font_mini, align="center")
         # self.draw.multiline_text((time_period_pos, 6), time_period, fill=(255, 255, 255), font=self.font_mini, align="center")
         # self.draw.multiline_text((6, 19), awayscore, fill=(255, 255, 255), font=self.font, align="center")
         # self.draw.multiline_text((59 - home_score_size, 19), homescore, fill=(255, 255, 255), font=self.font, align="center")

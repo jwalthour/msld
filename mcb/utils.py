@@ -45,7 +45,7 @@ def add_rpi_display_args(parser: argparse.ArgumentParser):
 
 def add_nfl_args(parser: argparse.ArgumentParser):
   """
-  Add arguments specific to the NFL display
+  Add arguments specific to the Mens College Basketball display
   """
   # User Options
   parser.add_argument("--fav-team", action="store", help="ID of the team to fallow. (Default:8 (Montreal Canadien)) Change the default in the config.json", type=int)
