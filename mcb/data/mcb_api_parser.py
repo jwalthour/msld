@@ -1,3 +1,4 @@
+import os
 import requests
 import datetime
 import time as t
@@ -65,6 +66,37 @@ def get_all_games():
         #     print("Can't hit ESPN api after multiple retries, dying ", e)
     except Exception as e:
         logger.error("Unknown exception", exc_info=True)
+
+
+def download_all_logos():
+    """
+    Download all the logos
+    """
+    # Scan data for logos
+    logos = []
+    try:
+        res = requests.get(URL)
+        res = res.json()
+        for event in res['events']:
+            for competition in event['competitions']:
+                for competitor in competition['competitors']:
+                    team = competitor['team']
+                    abbrev = team["abbreviation"]
+                    logo_url = team["logo"]
+                    logos.append((abbrev,logo_url))
+    except requests.exceptions.RequestException as e:
+        logger.warning("Error encountered getting game info, can't hit ESPN api, retrying")
+    except Exception as e:
+        logger.error("Unknown exception", exc_info=True)
+
+    dest_dir = os.path.join(os.path.dirname(__file__), '..', 'logos')
+    logger.info("Downloading %d logos to %s."%(len(logos), dest_dir))
+    for abbrev,logo_url in logos:
+        logo_data = requests.get(logo_url)
+        dest_file = os.path.join(dest_dir, "%s.png"%abbrev)
+        with open(dest_file, 'wb') as f:
+            f.write(logo_data.content)
+        logger.info("Saved %s"%abbrev)
 
 # def which_game(games, fav_team):
 #     # check for fav team first
