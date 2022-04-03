@@ -37,7 +37,7 @@ class Sport(Enum):
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format=" %(levelname)-8s %(asctime)s %(message)s")
-
+    logging.getLogger('mcb.data.data').setLevel(logging.DEBUG)
     # Get supplied command line arguments
     parser = argparse.ArgumentParser()
     add_rpi_display_args(parser)
