@@ -23,7 +23,7 @@ from enum import Enum
 logger = logging.getLogger(__name__)
 
 BTN_NFL = 0
-BTN_MLB = 1
+BTN_MCB = 1
 BTN_BRIGHTER = 2
 BTN_DIMMER = 3
 
@@ -38,6 +38,7 @@ class Sport(Enum):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format=" %(levelname)-8s %(asctime)s %(message)s")
     logging.getLogger('mcb.data.data').setLevel(logging.DEBUG)
+    logging.getLogger('input_listener').setLevel(logging.DEBUG)
     # Get supplied command line arguments
     parser = argparse.ArgumentParser()
     add_rpi_display_args(parser)
@@ -51,23 +52,23 @@ if __name__ == "__main__":
     # For some reason, we get a raspberry pi GPIO error
     # if this is initialized after the RGBMatrix.
     # Everything seems happy to coexist as long as this one's started first.
-    # input_listener = InputListener(args.stdio_btns)
-    # def btn_pressed(btn: int) -> None:
-    #     """
-    #     A button was pressed
-    #     btn: int, [0,3], 0 is topmost button
-    #     """
-    #     global requested_sport
-    #     if btn == BTN_NFL:
-    #         requested_sport = Sport.NFL
-    #     elif btn == BTN_MLB:
-    #         requested_sport = Sport.MLB
-    #     btn_event.set()
-    # def exit() -> None:
-    #     exit_event.set()
-    #     btn_event.set()
-    # input_listener.btn_cb = btn_pressed
-    # input_listener.exit_cb = exit
+    input_listener = InputListener(args.stdio_btns)
+    def btn_pressed(btn: int) -> None:
+        """
+        A button was pressed
+        btn: int, [0,3], 0 is topmost button
+        """
+        global requested_sport
+        if btn == BTN_NFL:
+            requested_sport = Sport.NFL
+        elif btn == BTN_MCB:
+            requested_sport = Sport.MCB
+        btn_event.set()
+    def exit() -> None:
+        exit_event.set()
+        btn_event.set()
+    input_listener.btn_cb = btn_pressed
+    input_listener.exit_cb = exit
     
     # Check for led configuration arguments
     matrixOptions = led_matrix_options(args)

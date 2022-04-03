@@ -53,7 +53,7 @@ class InputListener():
 
     def _falling_edge(self, channel):
         logger.debug("Falling edge: %r"%channel)
-        if channel in CHAR_FOR_BTN:
+        if channel in BCM_PIN_FOR_BTN:
             btn = BCM_PIN_FOR_BTN.index(channel)
             if self.btn_cb != None:
                 self.btn_cb(btn)
