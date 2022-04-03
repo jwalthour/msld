@@ -8,6 +8,7 @@ import argparse
 import time
 import logging
 from rgbmatrix import RGBMatrix
+from menu.menu import Menu
 from nfl.data.data import Data as NflData
 from nfl.data.scoreboard_config import ScoreboardConfig as NflScoreboardConfig
 from nfl.renderer.main import MainRenderer as NflMainRenderer
@@ -19,6 +20,8 @@ from mcb.renderer.main import MainRenderer as McbMainRenderer
 from input_listener import InputListener
 import threading
 from enum import Enum
+
+from renderer import Renderer
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +39,7 @@ class Sport(Enum):
     NONE = 'None'
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format=" %(levelname)-8s %(asctime)s %(message)s")
+    logging.basicConfig(level=logging.INFO)#, datefmt="%H:%M:%S")#, format=" %(levelname)-8s %(asctime)s %(message)s")
     logging.getLogger('mcb.data.data').setLevel(logging.DEBUG)
     logging.getLogger('input_listener').setLevel(logging.DEBUG)
     # Get supplied command line arguments
@@ -84,35 +87,37 @@ if __name__ == "__main__":
     mcb_data = McbData(mcb_config)
     mcb_renderer = McbMainRenderer(matrix, mcb_data)
 
-    renderers = {
+    renderer_for_sport = {
         Sport.NFL:nfl_renderer,
         Sport.MCB:mcb_renderer,
     }
-
+    menu_renderer = Menu()
     btn_event: threading.Event = threading.Event()
     exit_event: threading.Event = threading.Event()
 
 
     nfl_renderer.init()
     mcb_renderer.init()
+    cur_renderer: Renderer = None
     while not exit_event.is_set():
         if requested_sport != cur_sport:
             logger.info("Changing sport from %r to %r."%(cur_sport, requested_sport))
             try:
-                renderers[requested_sport].retrieve_data()
-                renderers[requested_sport].init()
+                renderer_for_sport[requested_sport].retrieve_data()
+                renderer_for_sport[requested_sport].init()
                 cur_sport = requested_sport
+                cur_renderer = renderer_for_sport[requested_sport]
             except:
                 logger.error("Uncaught exception in renderer.init(): ", exc_info=True)
 
         try:
-            delay = renderers[cur_sport].retrieve_data()
+            delay = cur_renderer.retrieve_data()
         except:
             logger.error("Uncaught exception in renderer.retrieve_data(): ", exc_info=True)
             delay = ERROR_RETRY_S
 
         try:
-            renderers[cur_sport].render()
+            cur_renderer.render()
         except:
             logger.error("Uncaught exception in renderer.render(): ", exc_info=True)
             
