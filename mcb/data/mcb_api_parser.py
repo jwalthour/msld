@@ -1,4 +1,6 @@
+import json
 import os
+from typing import Optional
 import requests
 import datetime
 import time as t
@@ -50,9 +52,6 @@ def get_all_games():
                     'time': info['status']['displayClock'], 'period': info['status']['period'], 'over': info['status']['type']['completed'],
                     # 'redzone': info.get('situation', {}).get('isRedZone'), 'possession': info.get('situation', {}).get('possession'),
                      'state': info['status']['type']['state']}
-            # For testing with NFL logos until I get the real ones
-            game['awayteam'] = 'NE'
-            game['hometeam'] = 'NE'
 
             games.append(game)
             # i += 1
@@ -68,26 +67,38 @@ def get_all_games():
         logger.error("Unknown exception", exc_info=True)
 
 
-def download_all_logos():
+def download_all_logos(api_data_path:Optional[str] = None) -> None:
     """
     Download all the logos
+    api_data_path: None to grab data from API.
+        If not None, must be a path to a file containing API data in JSON format, eg the sample file provided.
     """
     # Scan data for logos
     logos = []
-    try:
-        res = requests.get(URL)
-        res = res.json()
-        for event in res['events']:
+    api_data = None
+    if api_data_path is None:
+        try:
+            api_data = requests.get(URL)
+            api_data = api_data.json()
+        except requests.exceptions.RequestException as e:
+            logger.warning("Error encountered getting game info, can't hit ESPN api, retrying")
+        except Exception as e:
+            logger.error("Unknown exception", exc_info=True)
+    else:
+        try:
+            with open(api_data_path, 'r') as data_file:
+                api_data = json.load(data_file)
+        except Exception as e:
+            logger.error("Failed to load data file:", exc_info=True)
+
+    if not api_data is None:
+        for event in api_data['events']:
             for competition in event['competitions']:
                 for competitor in competition['competitors']:
                     team = competitor['team']
                     abbrev = team["abbreviation"]
                     logo_url = team["logo"]
                     logos.append((abbrev,logo_url))
-    except requests.exceptions.RequestException as e:
-        logger.warning("Error encountered getting game info, can't hit ESPN api, retrying")
-    except Exception as e:
-        logger.error("Unknown exception", exc_info=True)
 
     dest_dir = os.path.join(os.path.dirname(__file__), '..', 'logos')
     logger.info("Downloading %d logos to %s."%(len(logos), dest_dir))
@@ -125,3 +136,4 @@ def download_all_logos():
 #         print("Error encountered getting game info, can't hit ESPN api")
 #     except Exception as e:
 #         print("something bad?", e)
+

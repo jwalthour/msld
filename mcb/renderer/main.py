@@ -237,10 +237,6 @@ class MainRenderer(Renderer):
         if game is None:
             return
 
-        # For testing with NFL logos until I get the real ones
-        game['awayteam'] = 'NE'
-        game['hometeam'] = 'NE'
-
         homescore = game['homescore']
         awayscore = game['awayscore']
         logger.info("home: " + str(homescore) + ", away: " + str(awayscore))
