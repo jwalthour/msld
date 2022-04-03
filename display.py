@@ -10,7 +10,7 @@ class Display(abc.ABC):
         """
         raise NotImplementedError
     @abc.abstractmethod
-    def retrieve_data(self) -> float:
+    def poll(self) -> float:
         """
         Poll server for data
         return how long to wait (in secsonds, after next render) before next reder/draw cycle

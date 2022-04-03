@@ -41,7 +41,7 @@ class MainRenderer(Display):
         self.starttime = t.time()
         self.data.get_current_date()
 
-    def retrieve_data(self) -> float:
+    def poll(self) -> float:
         """
         Retrieve data.
         return: number of seconds to wait before next retrieval

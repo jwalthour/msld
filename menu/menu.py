@@ -14,7 +14,7 @@ class Menu(Display):
         """
         raise NotImplementedError
 
-    def retrieve_data(self) -> float:
+    def poll(self) -> float:
         """
         Poll server for data
         return how long to wait (in secsonds, after next render) before next reder/draw cycle

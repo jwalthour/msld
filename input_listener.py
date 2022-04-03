@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 import readchar
 import threading
 import logging
+from enums import MenuButton
 logger = logging.getLogger(__name__)
 
 GPIO.setmode(GPIO.BCM)
@@ -20,8 +21,8 @@ class InputListener():
     and reports either as a callback
     """
     _kt: threading.Thread = None
-    exit_cb:typing.Callable[[],None] = None
-    btn_cb:typing.Callable[[int], None] = None
+    exit_callback:typing.Callable[[],None] = None
+    button_callback:typing.Callable[[MenuButton], None] = None
 
     def __init__(self, listen_to_stdio: bool = False) -> None:
         for pin in BCM_PIN_FOR_BTN:
@@ -36,10 +37,11 @@ class InputListener():
         while True:
             input_char = readchar.readchar()
             if input_char in CHAR_FOR_BTN:
-                btn = CHAR_FOR_BTN.index(input_char)
-                logger.debug("Got button %d"%btn)
-                if self.btn_cb != None:
-                    self.btn_cb(btn)
+                btn_i = CHAR_FOR_BTN.index(input_char)
+                button = MenuButton(btn_i)
+                logger.debug("Got button %s"%button.name)
+                if self.button_callback != None:
+                    self.button_callback(button)
             elif input_char == '\x03':
                 logger.debug("^C")
                 break
@@ -48,15 +50,16 @@ class InputListener():
                 break
             else:
                 logger.debug("Char %r isn't a button."%input_char)
-        if self.exit_cb != None:
-            self.exit_cb()
+        if self.exit_callback != None:
+            self.exit_callback()
 
     def _falling_edge(self, channel):
         logger.debug("Falling edge: %r"%channel)
         if channel in BCM_PIN_FOR_BTN:
-            btn = BCM_PIN_FOR_BTN.index(channel)
-            if self.btn_cb != None:
-                self.btn_cb(btn)
+            btn_i = BCM_PIN_FOR_BTN.index(channel)
+            button = MenuButton(btn_i)
+            if self.button_callback != None:
+                self.button_callback(button)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
@@ -72,8 +75,8 @@ if __name__ == '__main__':
     def btn(btn: int):
         logger.info("Got button: %d"%btn)
 
-    il.btn_cb = btn
-    il.exit_cb = ex
+    il.button_callback = btn
+    il.exit_callback = ex
 
     while run:
         time.sleep(.1)
