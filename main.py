@@ -21,7 +21,7 @@ from input_listener import InputListener
 import threading
 from enum import Enum
 
-from renderer import Renderer
+from display import Display
 
 logger = logging.getLogger(__name__)
 
@@ -32,10 +32,11 @@ BTN_DIMMER = 3
 
 ERROR_RETRY_S = 10
 
-class Sport(Enum):
+class DisplayMode(Enum):
     NFL = 'NFL'
     MLB = "MLB"
     MCB = "MCB"
+    MENU = "Menu"
     NONE = 'None'
 
 if __name__ == "__main__":
@@ -49,8 +50,8 @@ if __name__ == "__main__":
     parser.add_argument('--stdio-btns', action='store_true')
     args = parser.parse_args()
 
-    cur_sport: Sport = Sport.NONE
-    requested_sport: Sport = Sport.MCB
+    cur_sport: DisplayMode = DisplayMode.NONE
+    requested_mode: DisplayMode = DisplayMode.MCB
 
     # For some reason, we get a raspberry pi GPIO error
     # if this is initialized after the RGBMatrix.
@@ -61,11 +62,11 @@ if __name__ == "__main__":
         A button was pressed
         btn: int, [0,3], 0 is topmost button
         """
-        global requested_sport
+        global requested_mode
         if btn == BTN_NFL:
-            requested_sport = Sport.NFL
+            requested_mode = DisplayMode.NFL
         elif btn == BTN_MCB:
-            requested_sport = Sport.MCB
+            requested_mode = DisplayMode.MCB
         btn_event.set()
     def exit() -> None:
         exit_event.set()
@@ -88,8 +89,8 @@ if __name__ == "__main__":
     mcb_renderer = McbMainRenderer(matrix, mcb_data)
 
     renderer_for_sport = {
-        Sport.NFL:nfl_renderer,
-        Sport.MCB:mcb_renderer,
+        DisplayMode.NFL:nfl_renderer,
+        DisplayMode.MCB:mcb_renderer,
     }
     menu_renderer = Menu()
     btn_event: threading.Event = threading.Event()
@@ -98,15 +99,15 @@ if __name__ == "__main__":
 
     nfl_renderer.init()
     mcb_renderer.init()
-    cur_renderer: Renderer = None
+    cur_renderer: Display = None
     while not exit_event.is_set():
-        if requested_sport != cur_sport:
-            logger.info("Changing sport from %r to %r."%(cur_sport, requested_sport))
+        if requested_mode != cur_sport:
+            logger.info("Changing sport from %r to %r."%(cur_sport, requested_mode))
             try:
-                renderer_for_sport[requested_sport].retrieve_data()
-                renderer_for_sport[requested_sport].init()
-                cur_sport = requested_sport
-                cur_renderer = renderer_for_sport[requested_sport]
+                renderer_for_sport[requested_mode].retrieve_data()
+                renderer_for_sport[requested_mode].init()
+                cur_sport = requested_mode
+                cur_renderer = renderer_for_sport[requested_mode]
             except:
                 logger.error("Uncaught exception in renderer.init(): ", exc_info=True)
 

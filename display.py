@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import abc
 
-class Renderer(abc.ABC):
+class Display(abc.ABC):
     @abc.abstractmethod
     def init(self) -> None:
         """

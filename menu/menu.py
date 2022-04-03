@@ -4,10 +4,10 @@
 Menu UI for selecting sport or other renderer
 """
 
-from renderer import Renderer
+from display import Display
 
 
-class Menu(Renderer):
+class Menu(Display):
     def init(self) -> None:
         """
         Prepare to loop (should be called every time this renderer is brought to the foreground)

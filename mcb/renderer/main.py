@@ -10,12 +10,12 @@ import time as t
 import re
 import logging
 
-from renderer import Renderer
+from display import Display
 logger = logging.getLogger(__name__)
 
 GAMES_REFRESH_RATE = 900.0
 
-class MainRenderer(Renderer):
+class MainRenderer(Display):
     data: Data = None
     matrix: rgbmatrix.RGBMatrix = None
 
