@@ -51,7 +51,7 @@ class Team:
         'Chicago Cubs': 'CHC',
         'Chicago White Sox': 'CHW',
         'Cincinnati Reds': 'CIN',
-        'Cleveland Indians': 'CLE',
+        'Cleveland Guardians': 'CLE',
         'Colorado Rockies': 'COL',
         'Detroit Tigers': 'DET',
         'Florida Marlins': 'FLA',
