@@ -9,10 +9,11 @@ class DisplayType(Enum):
     MLB = "MLB"
     MCB = "MCB"
     MENU = "Menu"
-    NONE = 'None'
+    BLANK = 'None'
 
 class MenuButton(Enum):
     A = 0
     B = 1
     C = 2
     D = 3
+    NONE = 4

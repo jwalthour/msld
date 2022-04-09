@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 import abc
+from typing import Tuple
+from enums import DisplayType, MenuButton
 
 class Display(abc.ABC):
     @abc.abstractmethod
@@ -10,11 +12,16 @@ class Display(abc.ABC):
         """
         raise NotImplementedError
     @abc.abstractmethod
-    def poll(self) -> float:
-        """
-        Poll server for data
-        return how long to wait (in secsonds, after next render) before next reder/draw cycle
-            if no button is pressed
+    def poll(self, button: MenuButton) -> Tuple[float, DisplayType]:
+        """Retrieve data, make decisions about state
+
+        Args:
+            button (MenuButton): Button pressed since last poll - will be NONE most of the time
+
+        Returns:
+            Tuple[float, DisplayType]: 
+                float: The number of seconds to wait before we'll have anything new to display, 
+                DisplayType: the display type that should replace this one (or the same display type to remain here)
         """
         raise NotImplementedError
     @abc.abstractmethod

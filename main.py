@@ -9,6 +9,7 @@ import time
 import logging
 from rgbmatrix import RGBMatrix
 from menu.menu import Menu
+from misc_displays.blank import Blank
 from nfl.data.data import Data as NflData
 from nfl.data.scoreboard_config import ScoreboardConfig as NflScoreboardConfig
 from nfl.renderer.main import MainRenderer as NflMainRenderer
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     parser.add_argument('--stdio-btns', action='store_true')
     args = parser.parse_args()
 
-    cur_type: DisplayType = DisplayType.NONE
+    cur_type: DisplayType = DisplayType.BLANK
     requested_type: DisplayType = DisplayType.MCB
 
     # For some reason, we get a raspberry pi GPIO error
@@ -74,39 +75,40 @@ if __name__ == "__main__":
     # Initialize Mens College Basketball
     mcb_config = McbScoreboardConfig("../mcb_config", args)
     mcb_data = McbData(mcb_config)
-    mcb_renderer = McbMainRenderer(matrix, mcb_data)
+    mcb = McbMainRenderer(matrix, mcb_data)
+    menu = Menu()
+    blank = Blank()
 
-    renderer_for_sport = {
+    display = {
         DisplayType.NFL:nfl_renderer,
-        DisplayType.MCB:mcb_renderer,
+        DisplayType.MCB:mcb,
+        DisplayType.MENU:menu,
+        DisplayType.BLANK:blank,
     }
-    menu_renderer = Menu()
     button_event: threading.Event = threading.Event()
     exit_event: threading.Event = threading.Event()
 
+    for key,disp in display.items():
+        disp.init()
 
-    nfl_renderer.init()
-    mcb_renderer.init()
-    cur_renderer: Display = None
     while not exit_event.is_set():
         if requested_type != cur_type:
             logger.info("Changing sport from %r to %r."%(cur_type, requested_type))
             try:
-                renderer_for_sport[requested_type].poll()
-                renderer_for_sport[requested_type].init()
+                display[requested_type].poll()
+                display[requested_type].init()
                 cur_type = requested_type
-                cur_renderer = renderer_for_sport[requested_type]
             except:
                 logger.error("Uncaught exception in renderer.init(): ", exc_info=True)
 
         try:
-            delay = cur_renderer.poll()
+            delay = display[cur_type].poll()
         except:
             logger.error("Uncaught exception in renderer.poll(): ", exc_info=True)
             delay = ERROR_RETRY_S
 
         try:
-            cur_renderer.render()
+            display[cur_type].render()
         except:
             logger.error("Uncaught exception in renderer.render(): ", exc_info=True)
             
