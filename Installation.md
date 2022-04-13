@@ -60,4 +60,5 @@ tmpfs on /run/user/1001 type tmpfs (rw,nosuid,nodev,relatime,size=191132k,mode=7
 ### Prerequisites
 ````bash
 sudo pip3 install pytz tzlocal requests
+sudo pip3 install tzlocal feedparser "pyowm>3" mlb-statsapi
 ````
